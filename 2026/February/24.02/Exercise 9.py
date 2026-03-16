@@ -1,5 +1,5 @@
 try:
-    numero = int(input("escreve um valor inteiro: "))
+    numero = (input("escreve um valor inteiro: "))
     print(f"o valor {numero} é um número inteiro.")
 
 except ValueError:
