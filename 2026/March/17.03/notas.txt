@@ -1,0 +1,5 @@
+ana, a, 17.5
+joao, b, 14.2
+maria, a, 19.0
+pedro, c, 12.8
+rita, b, 19.0
