@@ -1,29 +1,42 @@
-import turtle
+position_x = 0
+position_y = 0
 
 
-tim = turtle.Turtle()
-screen = turtle.Screen()
+def move_up() -> None:
+    global position_y
+    position_y += 1
 
-def up():
-    tim.setheading(90)
-    tim.forward(10)
-    
-def down():
-    tim.setheading(270) # 270 graus é para baixo
-    tim.forward(100)
-    
-def left():
-    tim.setheading(180)
-    tim.forward(100)
-    
-def right():
-    tim.setheading(0)
-    tim.forward(100)
-    
-screen.listen() # Permite que a tela escute os eventos de teclado
-screen.onkey(up, "up") # Associa a função 'up' à tecla de seta para cima
-screen.onkey(down, "down") # Associa a função 'down' à tecla
-screen.onkey(left, "left") # Associa a função 'left' à tecla de seta para esquerda
-screen.onkey(right, "right") # Associa a função 'right' à tecla de seta para direita
 
-screen.mainloop() # Mantém a janela aberta para ouvir os eventos de teclado
+def move_down() -> None:
+    global position_y
+    position_y -= 1
+
+
+def move_left() -> None:
+    global position_x
+    position_x -= 1
+
+
+def move_right() -> None:
+    global position_x
+    position_x += 1
+
+
+while True:
+    command = input("type up, down, left, right or exit: ").strip().lower()
+
+    if command == "up":
+        move_up()
+    elif command == "down":
+        move_down()
+    elif command == "left":
+        move_left()
+    elif command == "right":
+        move_right()
+    elif command == "exit":
+        break
+    else:
+        print("invalid command")
+        continue
+
+    print("position:", position_x, position_y)
