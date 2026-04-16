@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from pathlib import Path
 
 from aluno import student
@@ -8,7 +6,7 @@ from persistencia import load_students, save_students
 data_file = str(Path(__file__).with_name("class_record.txt"))
 
 
-def ask_student_name(students: dict[str, student]) -> student | None:
+def ask_student_name(students):
     name = input("student name: ").strip().lower()
     if not name:
         print("invalid name.")
@@ -20,7 +18,7 @@ def ask_student_name(students: dict[str, student]) -> student | None:
     return item
 
 
-def ask_grade() -> float | None:
+def ask_grade():
     try:
         grade = float(input("module grade (0 to 20): ").strip().replace(",", "."))
     except ValueError:
@@ -32,7 +30,7 @@ def ask_grade() -> float | None:
     return grade
 
 
-def register_student(students: dict[str, student]) -> None:
+def register_student(students):
     name = input("student name: ").strip().lower()
     if not name:
         print("invalid name.")
@@ -44,7 +42,7 @@ def register_student(students: dict[str, student]) -> None:
     print("student registered.")
 
 
-def add_subject_modules(students: dict[str, student]) -> None:
+def add_subject_modules(students):
     item = ask_student_name(students)
     if not item:
         return
@@ -64,7 +62,7 @@ def add_subject_modules(students: dict[str, student]) -> None:
     print("subject and modules saved.")
 
 
-def add_module_grade(students: dict[str, student]) -> None:
+def add_module_grade(students):
     item = ask_student_name(students)
     if not item:
         return
@@ -85,7 +83,7 @@ def add_module_grade(students: dict[str, student]) -> None:
         print("module not found in this subject.")
 
 
-def show_averages(students: dict[str, student]) -> None:
+def show_averages(students):
     item = ask_student_name(students)
     if not item:
         return
@@ -107,7 +105,7 @@ def show_averages(students: dict[str, student]) -> None:
         print(f"overall average: {overall:.2f}")
 
 
-def list_class(students: dict[str, student]) -> None:
+def list_class(students):
     if not students:
         print("no students registered yet.")
         return
@@ -116,7 +114,7 @@ def list_class(students: dict[str, student]) -> None:
         print(f"- {name}")
 
 
-def menu() -> None:
+def menu():
     students = load_students(data_file)
 
     while True:

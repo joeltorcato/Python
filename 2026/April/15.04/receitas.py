@@ -1,153 +1,142 @@
 import os
 
-FICHEIRO_RECEITAS = "receitas.txt"
+ficheiro_receitas = "receitas.txt"
 receitas = []
 
 
 def carregar_receitas():
-    """Carrega as receitas existentes do ficheiro de texto."""
-    if not os.path.exists(FICHEIRO_RECEITAS):
+    receitas.clear()
+    if not os.path.exists(ficheiro_receitas):
         return
-
-    with open(FICHEIRO_RECEITAS, "r", encoding="utf-8") as ficheiro:
-        conteudo = ficheiro.read().strip()
-
-    if not conteudo:
+    txt = open(ficheiro_receitas, "r", encoding="utf-8").read()
+    txt = (txt or "").replace("\r\n", "\n").strip()
+    if not txt:
         return
-
-    blocos = conteudo.split("\n=== RECEITA ===\n")
+    t = txt.lower()
+    blocos = t.split("=== receita ===")
     for bloco in blocos:
-        if not bloco.strip():
+        bloco = bloco.strip()
+        if not bloco:
             continue
-
-        receita = {
-            "nome": "",
-            "ingredientes": [],
-            "comentarios": [],
-            "avaliacoes": [],
-        }
-
+        r = {"nome": "", "ingredientes": [], "comentarios": [], "avaliacoes": []}
         for linha in bloco.splitlines():
-            if linha.startswith("Nome: "):
-                receita["nome"] = linha.replace("Nome: ", "", 1).strip()
-            elif linha.startswith("Ingredientes: "):
-                ingredientes_texto = linha.replace("Ingredientes: ", "", 1)
-                receita["ingredientes"] = [item.strip() for item in ingredientes_texto.split(",") if item.strip()]
-            elif linha.startswith("Comentarios: "):
-                comentarios_texto = linha.replace("Comentarios: ", "", 1)
-                receita["comentarios"] = [item.strip() for item in comentarios_texto.split(" | ") if item.strip() and item.strip() != "<sem comentário>"]
-            elif linha.startswith("Avaliacoes: "):
-                avaliacoes_texto = linha.replace("Avaliacoes: ", "", 1)
-                for avaliacao in avaliacoes_texto.split(","):
-                    avaliacao = avaliacao.strip()
-                    if avaliacao:
+            linha = linha.strip()
+            if linha.startswith("nome:"):
+                r["nome"] = linha.split("nome:", 1)[1].strip()
+            elif linha.startswith("ingredientes:"):
+                x = linha.split("ingredientes:", 1)[1].strip()
+                r["ingredientes"] = [i.strip() for i in x.split(",") if i.strip()]
+            elif linha.startswith("comentarios:"):
+                x = linha.split("comentarios:", 1)[1].strip()
+                if x and not x.startswith("<sem"):
+                    r["comentarios"] = [c.strip() for c in x.split(" | ") if c.strip()]
+            elif linha.startswith("avaliacoes:"):
+                x = linha.split("avaliacoes:", 1)[1].strip()
+                if x:
+                    for av in x.split(","):
+                        av = av.strip()
+                        if not av:
+                            continue
                         try:
-                            receita["avaliacoes"].append(float(avaliacao))
-                        except ValueError:
+                            r["avaliacoes"].append(float(av))
+                        except:
                             pass
-
-        receitas.append(receita)
+        if r["nome"]:
+            receitas.append(r)
 
 
 def salvar_receitas():
-    #Salva todas as receitas no ficheiro de texto.
-    with open(FICHEIRO_RECEITAS, "w", encoding="utf-8") as ficheiro:
-        for receita in receitas:
-            ficheiro.write("=== RECEITA ===\n")
-            ficheiro.write(f"Nome: {receita['nome']}\n")
-            ficheiro.write(f"Ingredientes: {', '.join(receita['ingredientes'])}\n")
-            comentario_texto = " | ".join(receita["comentarios"]) if receita["comentarios"] else "<sem comentário>"
-            ficheiro.write(f"Comentarios: {comentario_texto}\n")
-            avaliacoes_texto = ", ".join(str(av) for av in receita["avaliacoes"]) if receita["avaliacoes"] else ""
-            ficheiro.write(f"Avaliacoes: {avaliacoes_texto}\n")
-            ficheiro.write("\n")
+    with open(ficheiro_receitas, "w", encoding="utf-8", newline="") as f:
+        for r in receitas:
+            f.write("=== receita ===\n")
+            f.write(f"nome: {r['nome']}\n")
+            f.write(f"ingredientes: {', '.join(r['ingredientes'])}\n")
+            c = " | ".join(r["comentarios"]) if r["comentarios"] else "<sem comentário>"
+            f.write(f"comentarios: {c}\n")
+            a = ", ".join(str(x) for x in r["avaliacoes"]) if r["avaliacoes"] else ""
+            f.write(f"avaliacoes: {a}\n\n")
 
 
-def obter_receita_por_nome(nome_receita):
-    """Retorna a receita com o nome exato ou None se não existir."""
-    for receita in receitas:
-        if receita["nome"].lower() == nome_receita.lower():
-            return receita
+def obter_receita_por_nome(nome):
+    n = (nome or "").strip().lower()
+    for r in receitas:
+        if r["nome"] == n:
+            return r
     return None
 
 
 def adicionar_receita(nome_receita, ingredientes, comentario=None, avaliacao=None):
-    """Adiciona uma nova receita e grava no ficheiro."""
-    if not nome_receita.strip():
-        print("Erro: o nome da receita não pode ficar vazio.")
+    nome = (nome_receita or "").strip().lower()
+    if not nome:
+        print("erro: o nome da receita nao pode ficar vazio.")
         return False
-
-    if not ingredientes:
-        print("Erro: a receita deve ter pelo menos um ingrediente.")
+    ing = [(i or "").strip().lower() for i in ingredientes or []]
+    ing = [i for i in ing if i]
+    if not ing:
+        print("erro: a receita deve ter pelo menos um ingrediente.")
         return False
-
-    if obter_receita_por_nome(nome_receita):
-        print("Erro: já existe uma receita com esse nome.")
+    if obter_receita_por_nome(nome):
+        print("erro: ja existe uma receita com esse nome.")
         return False
-
-    nova_receita = {
-        "nome": nome_receita.strip(),
-        "ingredientes": [item.strip() for item in ingredientes if item.strip()],
-        "comentarios": [],
-        "avaliacoes": [],
-    }
-
-    if comentario and comentario.strip():
-        nova_receita["comentarios"].append(comentario.strip())
-
+    r = {"nome": nome, "ingredientes": ing, "comentarios": [], "avaliacoes": []}
+    if comentario is not None:
+        c = (comentario or "").strip().lower()
+        if c:
+            r["comentarios"].append(c)
     if avaliacao is not None:
-        nova_receita["avaliacoes"].append(avaliacao)
-
-    receitas.append(nova_receita)
+        try:
+            r["avaliacoes"].append(float(avaliacao))
+        except:
+            pass
+    receitas.append(r)
     salvar_receitas()
     return True
 
 
 def pesquisar_receita(palavra_chave):
-    """Retorna a lista de receitas que correspondem à palavra-chave."""
-    chave = palavra_chave.strip().lower()
-    resultados = []
-
-    for receita in receitas:
-        if chave in receita["nome"].lower():
-            resultados.append(receita)
+    chave = (palavra_chave or "").strip().lower()
+    if not chave:
+        return []
+    res = []
+    for r in receitas:
+        if chave in r["nome"]:
+            res.append(r)
             continue
-
-        if any(chave in ingrediente.lower() for ingrediente in receita["ingredientes"]):
-            resultados.append(receita)
+        if any(chave in i for i in r["ingredientes"]):
+            res.append(r)
             continue
-
-        if any(chave in comentario.lower() for comentario in receita["comentarios"]):
-            resultados.append(receita)
+        if any(chave in c for c in r["comentarios"]):
+            res.append(r)
             continue
-
-    return resultados
+    return res
 
 
 def remover_receita(nome_receita):
-    #Remove uma receita e atualiza o ficheiro.
-    receita = obter_receita_por_nome(nome_receita)
-    if receita:
-        receitas.remove(receita)
-        salvar_receitas()
-        return True
-    return False
+    r = obter_receita_por_nome(nome_receita)
+    if not r:
+        return False
+    receitas.remove(r)
+    salvar_receitas()
+    return True
 
 
 def atualizar_receita(nome_receita, novos_ingredientes=None, novo_comentario=None, nova_avaliacao=None):
-    """Atualiza dados de uma receita existente."""
-    receita = obter_receita_por_nome(nome_receita)
-    if not receita:
+    r = obter_receita_por_nome(nome_receita)
+    if not r:
         return False
-
-    if novos_ingredientes is not None and novos_ingredientes:
-        receita["ingredientes"] = [item.strip() for item in novos_ingredientes if item.strip()]
-
-    if novo_comentario and novo_comentario.strip():
-        receita["comentarios"].append(novo_comentario.strip())
-
+    if novos_ingredientes is not None:
+        ing = [(i or "").strip().lower() for i in novos_ingredientes or []]
+        ing = [i for i in ing if i]
+        if ing:
+            r["ingredientes"] = ing
+    if novo_comentario is not None:
+        c = (novo_comentario or "").strip().lower()
+        if c:
+            r["comentarios"].append(c)
     if nova_avaliacao is not None:
-        receita["avaliacoes"].append(nova_avaliacao)
-
+        try:
+            r["avaliacoes"].append(float(nova_avaliacao))
+        except:
+            pass
     salvar_receitas()
     return True

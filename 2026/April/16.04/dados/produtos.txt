@@ -1,0 +1,2 @@
+codigo;nome;preco
+t1;teste;1.00
