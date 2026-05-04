@@ -12,7 +12,7 @@ print('forma dos dados:', X.shape)
 
 X_treino, X_teste, y_treino, y_teste = train_test_split(X, y, test_size=0.2, random_state=42)
 
-modelo = KNeighborsClassifier(n_neighbors=3)
+modelo = KNeighborsClassifier(n_neighbors=10)
 modelo.fit(X_treino, y_treino)
 
 previsoes = modelo.predict(X_teste)
