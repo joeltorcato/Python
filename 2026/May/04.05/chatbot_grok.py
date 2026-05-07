@@ -1,6 +1,5 @@
 import requests
 
-chave_api = "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"
 url = "https://api.groq.com/openai/v1/chat/completions"
 model = "llama-3.3-70b-versatile"
 
