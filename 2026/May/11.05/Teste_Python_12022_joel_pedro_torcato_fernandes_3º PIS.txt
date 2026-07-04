@@ -1,0 +1,256 @@
+═══════════════════════════════════════════════════════════════
+TESTE DE PYTHON - RESPOSTAS DO ALUNO
+Escola Secundária Dr. António Carvalho Figueiredo
+═══════════════════════════════════════════════════════════════
+
+ DADOS DO ALUNO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Nome: joel pedro torcato fernandes
+Número: 12022
+Turma: 3º PIS
+Idade: 17
+Hobby: ler
+Animal Favorito: cão
+Cidade: loures
+Data de Submissão: 11/05/2026, 17:57:49
+
+═══════════════════════════════════════════════════════════════
+QUESTÃO 1 - VARIÁVEIS E PRINT
+═══════════════════════════════════════════════════════════════
+
+# fiz algo simples, tipo uma biografia do github
+
+nome = "joel Pedro torcato fernandes"
+idade = 17
+hobby = "ler"
+animal = "cão"
+cidade = "loures"
+
+print("nome:", nome)
+print("idade:", idade, "anos")
+print("hobby:", hobby)
+print("animal favorito:", animal)
+print("cidade:", cidade)
+print()
+print("sou de", cidade + ", adoro", hobby, "e o meu animal ideal é um", animal + ".")
+print()
+print("#leitor #loures #cão")
+
+""" D:\PIS\programação\Python>python "d:\PIS\programação\Python\2026\May\11.05\atividades\atividade 1.py"
+nome: joel Pedro torcato fernandes
+idade: 17 anos
+hobby: ler
+animal favorito: cão
+cidade: loures
+
+sou de loures, adoro ler e o meu animal ideal é um cão.
+
+#leitor #loures #cão """ (os # são cringe, mas as pessoas usam, o mundo está perdido :=)
+
+═══════════════════════════════════════════════════════════════
+QUESTÃO 2 - ESTRUTURAS CONDICIONAIS
+═══════════════════════════════════════════════════════════════
+
+# usei o cursor para resolver o erro de não aparecer nada no terminal
+
+nome = "joel Pedro torcato fernandes"
+nome_para_mostrar = nome.lower()
+
+print()
+print("classificador de leitura", flush=True) # flush=True serve para evitar ecrã em branco
+print(
+    nome_para_mostrar
+    + ", o teu hobby é ler. responde à pergunta para saberes que tipo de leitor és.",
+    flush=True,
+)
+print(flush=True)
+
+livros_texto = input("quantos livros lês por mês, em média? ")
+livros_por_mes = int(livros_texto)
+
+print(flush=True)
+
+if livros_por_mes < 0:
+    print(
+        nome_para_mostrar + ", esse número não faz sentido. corre outra vez e usa 0 ou mais.",
+        flush=True,
+    )
+elif livros_por_mes == 0:
+    print(
+        nome_para_mostrar
+        + ", neste momento és um leitor em pausa - há tempo para voltar às histórias.",
+        flush=True,
+    )
+elif livros_por_mes == 1:
+    print(
+        nome_para_mostrar
+        + ", és um leitor constante: um livro por mês já é um bom hábito.",
+        flush=True,
+    )
+elif livros_por_mes <= 3:
+    print(
+        nome_para_mostrar
+        + ", és um leitor dedicado - vais ao ritmo de quem gosta de mergulhar em bons livros.",
+        flush=True,
+    )
+elif livros_por_mes <= 6:
+    print(
+        nome_para_mostrar
+        + ", és um leitor apaixonado - praticamente um livro por semana ou mais.",
+        flush=True,
+    )
+else:
+    print(
+        nome_para_mostrar
+        + ", és um leitor voraz - poucos conseguem acompanhar o teu ritmo.",
+        flush=True,
+    )
+
+""" d:\PIS\programação\Python\2026\May\11.05\atividades>python "classificador personalizado.py"
+
+classificador de leitura
+joel pedro torcato fernandes, o teu hobby é ler. responde à pergunta para saberes que tipo de leitor és.
+
+quantos livros lês por mês, em média? 5 (<- resposta do utilizador)
+
+joel pedro torcato fernandes, és um leitor apaixonado - praticamente um livro por semana ou mais. """
+
+═══════════════════════════════════════════════════════════════
+QUESTÃO 3 - LISTAS E CICLOS
+═══════════════════════════════════════════════════════════════
+
+# este exercício estava um pouco confuso, para ser sincero
+
+cidade = "loures"
+hobby = "ler"
+
+favoritos = ["fantasia", "ficção científica", "história", "biografias", "bandas desenhadas"]
+
+print("sou de " + cidade + " e adoro " + hobby + ". estas são coisas que gosto de ler:")
+for coisa in favoritos:
+    print("  - " + coisa)
+
+favoritos.append("poesia") # adicionei poesia (MELHOR ESTILO, OBRIGADO FERNANDO PESSOA)
+favoritos.remove("ficção científica") # nem preciso dizer o que fiz aqui
+favoritos.sort()
+
+print()
+print("atualizei a lista: acrescentei poesia, tirei ficção científica e ordenei alfabeticamente.")
+print("em " + cidade + " leio de tudo, mas isto é o que ficou na lista agora:")
+for coisa in favoritos:
+    print("  - " + coisa)
+
+""" d:\PIS\programação\Python\2026\May\11.05\atividades>python "d:\PIS\programação\Python\2026\May\11.05\atividades\lista de favoritos.py"
+sou de loures e adoro ler. estas são coisas que gosto de ler:
+  - fantasia
+  - ficção científica
+  - história
+  - biografias
+  - bandas desenhadas
+
+atualizei a lista: acrescentei poesia, tirei ficção científica e ordenei alfabeticamente.
+em loures leio de tudo, mas isto é o que ficou na lista agora:
+  - bandas desenhadas
+  - biografias
+  - fantasia
+  - história
+  - poesia """
+
+═══════════════════════════════════════════════════════════════
+QUESTÃO 4 - FUNÇÕES
+═══════════════════════════════════════════════════════════════
+
+# na minha cabeça este calculo faz sentido
+def dias_para_terminar_livro(paginas_do_livro, paginas_por_dia):
+    if paginas_por_dia <= 0:
+        return 0
+    dias = (paginas_do_livro + paginas_por_dia - 1) // paginas_por_dia
+    return dias
+
+
+# exemplo 1: livro mais curto, ritmo mais devagar (tipo o jotapê :=)
+livro_paginas = 240
+ritmo_diario = 12
+print(
+    "exemplo 1: livro com",
+    livro_paginas,
+    "paginas,",
+    ritmo_diario,
+    "paginas por dia ->",
+    dias_para_terminar_livro(livro_paginas, ritmo_diario),
+    "dias para terminar.",
+)
+
+# exemplo 2: livro maior, ritmo no autocarro entre loures e lisboa (25 minutos dá para ler 18 páginas, eu consigo)
+livro_grande = 450
+ritmo_autocarro = 18
+print(
+    "exemplo 2: livro com",
+    livro_grande,
+    "paginas,",
+    ritmo_autocarro,
+    "por dia ->",
+    dias_para_terminar_livro(livro_grande, ritmo_autocarro),
+    "dias para terminar.",
+)
+
+""" d:\PIS\programação\Python\2026\May\11.05\atividades>python "d:\PIS\programação\Python\2026\May\11.05\atividades\função personalizada.py"
+exemplo 1: livro com 240 paginas, 12 paginas por dia -> 20 dias para terminar.
+exemplo 2: livro com 400 paginas, 18 por dia -> 50 dias para terminar. """
+
+═══════════════════════════════════════════════════════════════
+QUESTÃO 5 - DICIONÁRIOS
+═══════════════════════════════════════════════════════════════
+
+perfil = {
+    "nome": "joel pedro torcato fernandes",
+    "idade": 17,
+    "cidade": "loures",
+    "hobby": "ler",
+    "animal": "cão",
+    "comida_favorita": "língua de vaca",
+    "serie_favorita": "friends", # MELHOR SERIE DE TODOS OS TEMPOS (o professor concorda comigo) 
+}
+
+print("resumo das chaves do perfil")
+print(list(perfil.keys())) # lista de chaves do perfil, eu vi aqui: https://www.geeksforgeeks.org/python/python-print-dictionary-keys-and-values/
+print()
+
+print("resumo dos valores")
+print(list(perfil.values()))
+print()
+
+print("perfil formatado (campo a campo)")
+for campo, valor in perfil.items():
+    print("  " + str(campo).ljust(18) + ": " + str(valor)) # ljust(18) serve para alinhar o texto à esquerda e preencher com espaços para que o texto fique com 18 caracteres de largura, não sabia que existia mas achei útil
+print()
+
+# get() com chave que existe
+print("idade registada:", perfil.get("idade"))
+# get() com chave que não existe (default útil para dados opcionais)
+print("telefone:", perfil.get("telefone", "não está guardado no dicionário"))
+print() 
+# como era preciso usar, fiz dessa forma
+
+""" d:\PIS\programação\Python\2026\May\11.05\atividades>python "d:\PIS\programação\Python\2026\May\11.05\atividades\base de dados pessoal.py"
+resumo das chaves do perfil
+['nome', 'idade', 'cidade', 'hobby', 'animal', 'comida_favorita', 'serie_favorita']
+
+resumo dos valores
+['joel pedro torcato fernandes', 17, 'loures', 'ler', 'cão', 'língua de vaca', 'friends']
+
+perfil formatado (campo a campo)
+  nome              : joel pedro torcato fernandes
+  idade             : 17
+  cidade            : loures
+  hobby             : ler
+  animal            : cão
+  comida_favorita   : língua de vaca
+  serie_favorita    : friends
+
+idade registada: 17
+telefone: não está guardado no dicionário """
+
+═══════════════════════════════════════════════════════════════
+FIM DO TESTE
+═══════════════════════════════════════════════════════════════

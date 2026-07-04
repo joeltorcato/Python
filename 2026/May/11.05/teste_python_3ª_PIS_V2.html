@@ -1,0 +1,1421 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Python - Verificação de Originalidade</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Manrope:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0e27;
+            --bg-secondary: #151a3f;
+            --bg-card: #1a1f4a;
+            --accent-primary: #00ff88;
+            --accent-secondary: #00d4ff;
+            --text-primary: #ffffff;
+            --text-secondary: #a8b2d1;
+            --warning: #ff6b6b;
+            --success: #51cf66;
+            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        body {
+            font-family: 'Manrope', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(118, 75, 162, 0.1) 0%, transparent 50%);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            text-align: center;
+            padding: 3rem 0;
+            position: relative;
+        }
+
+        h1 {
+            font-family: 'Space Mono', monospace;
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            animation: glowTitle 3s ease-in-out infinite;
+        }
+
+        @keyframes glowTitle {
+            0%, 100% { filter: drop-shadow(0 0 20px rgba(0, 255, 136, 0.3)); }
+            50% { filter: drop-shadow(0 0 30px rgba(0, 255, 136, 0.5)); }
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        .info-box {
+            background: var(--bg-card);
+            border-left: 4px solid var(--accent-primary);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .info-box h3 {
+            color: var(--accent-primary);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .info-box ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .info-box li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .info-box li:before {
+            content: "▹";
+            position: absolute;
+            left: 0;
+            color: var(--accent-secondary);
+            font-weight: bold;
+        }
+
+        .student-info {
+            background: var(--bg-secondary);
+            padding: 2rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+            border: 2px solid var(--accent-primary);
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.2);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--accent-secondary);
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--bg-card);
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-family: 'Manrope', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
+        }
+
+        .question-card {
+            background: var(--bg-secondary);
+            padding: 2rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            transition: all 0.3s ease;
+            opacity: 0;
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .question-card:hover {
+            border-color: var(--accent-primary);
+            box-shadow: 0 8px 30px rgba(0, 255, 136, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .question-number {
+            display: inline-block;
+            background: var(--gradient);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .question-title {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .question-description {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+        }
+
+        .required-personalization {
+            background: rgba(255, 107, 107, 0.1);
+            border-left: 3px solid var(--warning);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        .required-personalization strong {
+            color: var(--warning);
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 200px;
+            padding: 1rem;
+            background: var(--bg-card);
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-family: 'Space Mono', monospace;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            resize: vertical;
+            transition: all 0.3s ease;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
+        }
+
+        .code-hint {
+            background: rgba(0, 212, 255, 0.1);
+            border-left: 3px solid var(--accent-secondary);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            font-family: 'Space Mono', monospace;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: var(--bg-primary);
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Space Mono', monospace;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(0, 255, 136, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(0, 255, 136, 0.5);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .validation-result {
+            margin-top: 2rem;
+            padding: 2rem;
+            border-radius: 12px;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .validation-result.success {
+            background: rgba(81, 207, 102, 0.1);
+            border: 2px solid var(--success);
+        }
+
+        .validation-result.warning {
+            background: rgba(255, 107, 107, 0.1);
+            border: 2px solid var(--warning);
+        }
+
+        .validation-item {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .validation-item:last-child {
+            border-bottom: none;
+        }
+
+        .validation-icon {
+            display: inline-block;
+            margin-right: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        .progress-bar {
+            background: var(--bg-card);
+            height: 8px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 2rem 0;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease;
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+        }
+
+        .score-display {
+            text-align: center;
+            font-size: 3rem;
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            margin: 2rem 0;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .tips-section {
+            background: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+        }
+
+        .tips-section h4 {
+            color: var(--accent-primary);
+            margin-bottom: 1rem;
+        }
+
+        .tip {
+            padding: 0.5rem 0;
+            color: var(--text-secondary);
+        }
+
+        .timer-box {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--bg-card);
+            border: 2px solid var(--accent-primary);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            min-width: 200px;
+        }
+
+        .timer-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.3rem;
+        }
+
+        .timer-display {
+            font-family: 'Space Mono', monospace;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent-primary);
+            text-align: center;
+        }
+
+        .timer-display.warning {
+            color: #FFA500;
+            animation: pulse 1s ease-in-out infinite;
+        }
+
+        .timer-display.critical {
+            color: var(--warning);
+            animation: pulse 0.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        .school-info {
+            background: var(--bg-card);
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            text-align: center;
+            border-left: 4px solid var(--accent-secondary);
+        }
+
+        .school-info p {
+            margin: 0.3rem 0;
+            color: var(--text-secondary);
+        }
+
+        footer {
+            text-align: center;
+            padding: 3rem 0;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .question-card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="timer-box">
+        <div class="timer-label">⏱️ Tempo Restante</div>
+        <div class="timer-display" id="timer">90:00</div>
+    </div>
+    
+    <div class="container">
+        <header>
+            <h1>🐍 TESTE PYTHON</h1>
+            <p class="subtitle">Escola Secundária Dr. António Carvalho Figueiredo</p>
+            <p class="subtitle" style="font-size: 0.95rem; margin-top: 0.5rem;">3º PIS • Duração: 90 minutos</p>
+        </header>
+
+        <div class="school-info">
+            <p style="font-size: 1.1rem; font-weight: 600; color: var(--accent-primary);"> Escola Secundária Dr. António Carvalho Figueiredo</p>
+            <p>Turma: 3º PIS</p>
+            <p>Duração do Teste: 90 minutos</p>
+            <p style="font-size: 0.9rem; margin-top: 0.5rem;"> O cronómetro inicia automaticamente quando abre esta página</p>
+        </div>
+
+        <div class="info-box">
+            <h3> Instruções Importantes</h3>
+            <ul>
+                <li><strong>PODE usar IA</strong> (ChatGPT, Claude, etc.) para ajuda e orientação</li>
+                <li><strong>NÃO PODE fazer copy-paste direto</strong> - todo o código deve ser personalizado</li>
+                <li><strong>Cada resposta deve incluir elementos únicos</strong> baseados nos seus dados pessoais</li>
+                <li><strong>O sistema irá verificar automaticamente</strong> se personalizou as respostas</li>
+                <li><strong>Respostas genéricas serão sinalizadas</strong> como suspeitas de cópia</li>
+            </ul>
+        </div>
+
+        <div class="student-info">
+            <h2 style="margin-bottom: 1.5rem; color: var(--accent-primary);">📋 Dados do Aluno</h2>
+            
+            <div class="form-group">
+                <label for="nome">Nome Completo:</label>
+                <input type="text" id="nome" placeholder="Ex: João Manuel Silva" required>
+            </div>
+
+            <div class="form-group">
+                <label for="numero">Número de Aluno:</label>
+                <input type="text" id="numero" placeholder="Ex: 2024001" required>
+            </div>
+
+            <div class="form-group">
+                <label for="turma">Turma:</label>
+                <input type="text" id="turma" value="3º PIS" readonly style="background: var(--bg-primary);">
+            </div>
+
+            <div class="form-group">
+                <label for="idade">Idade:</label>
+                <input type="number" id="idade" min="10" max="100" placeholder="Ex: 17" required>
+            </div>
+
+            <div class="form-group">
+                <label for="hobby">Hobby ou Interesse Principal:</label>
+                <input type="text" id="hobby" placeholder="Ex: Futebol, Fotografia, Música..." required>
+            </div>
+
+            <div class="form-group">
+                <label for="animal">Animal Favorito:</label>
+                <input type="text" id="animal" placeholder="Ex: Cão, Gato, Pássaro..." required>
+            </div>
+
+            <div class="form-group">
+                <label for="cidade">Cidade onde vive:</label>
+                <input type="text" id="cidade" placeholder="Ex: Loures, Lisboa, Odivelas..." required>
+            </div>
+        </div>
+
+        <!-- QUESTÃO 1 -->
+        <div class="question-card" style="animation-delay: 0.1s;">
+            <span class="question-number">QUESTÃO 1 • Variáveis e Print</span>
+            <h3 class="question-title">Apresentação Personalizada</h3>
+            <p class="question-description">
+                Crie um programa que apresente os seus dados pessoais de forma criativa.
+            </p>
+
+            <div class="required-personalization">
+                <strong> Personalização Obrigatória:</strong><br>
+                • Use os dados que inseriu acima (nome, idade, hobby, animal, cidade)<br>
+                • Crie pelo menos 5 variáveis diferentes<br>
+                • Use formatação com f-strings ou .format()<br>
+                • Inclua pelo menos um cálculo (ex: ano de nascimento)
+            </div>
+
+            <div class="code-hint">
+                 Dica: Pense em apresentar-se como se fosse um perfil de rede social
+            </div>
+
+            <label for="q1">Cole aqui o seu código Python:</label>
+            <textarea id="q1" placeholder="# Escreva o seu código aqui..."></textarea>
+        </div>
+
+        <!-- QUESTÃO 2 -->
+        <div class="question-card" style="animation-delay: 0.2s;">
+            <span class="question-number">QUESTÃO 2 • Estruturas Condicionais</span>
+            <h3 class="question-title">Classificador Personalizado</h3>
+            <p class="question-description">
+                Crie um programa que classifique algo relacionado com o seu hobby.
+            </p>
+
+            <div class="required-personalization">
+                <strong> Personalização Obrigatória:</strong><br>
+                • O programa deve estar relacionado com o HOBBY que indicou<br>
+                • Use estruturas if/elif/else<br>
+                • Peça input ao utilizador<br>
+                • Dê mensagens personalizadas com o seu nome
+            </div>
+
+            <div class="code-hint">
+                Exemplo: Se o hobby é futebol, classifique equipas ou jogadores<br>
+                Se é fotografia, classifique tipos de câmaras ou técnicas
+            </div>
+
+            <label for="q2">Cole aqui o seu código Python:</label>
+            <textarea id="q2" placeholder="# Escreva o seu código aqui..."></textarea>
+        </div>
+
+        <!-- QUESTÃO 3 -->
+        <div class="question-card" style="animation-delay: 0.3s;">
+            <span class="question-number">QUESTÃO 3 • Listas e Ciclos</span>
+            <h3 class="question-title">Lista de Favoritos</h3>
+            <p class="question-description">
+                Crie um programa que trabalhe com listas relacionadas com os seus interesses.
+            </p>
+
+            <div class="required-personalization">
+                <strong> Personalização Obrigatória:</strong><br>
+                • Crie uma lista com pelo menos 5 itens relacionados com o seu HOBBY ou ANIMAL FAVORITO<br>
+                • Use um ciclo for ou while para percorrer a lista<br>
+                • Inclua o nome da sua CIDADE em pelo menos uma mensagem<br>
+                • Use métodos de lista (append, remove, sort, etc.)
+            </div>
+
+            <div class="code-hint">
+                 Pode ser uma lista de: locais na sua cidade, raças do seu animal favorito,<br>
+                equipamento do seu hobby, etc.
+            </div>
+
+            <label for="q3">Cole aqui o seu código Python:</label>
+            <textarea id="q3" placeholder="# Escreva o seu código aqui..."></textarea>
+        </div>
+
+        <!-- QUESTÃO 4 -->
+        <div class="question-card" style="animation-delay: 0.4s;">
+            <span class="question-number">QUESTÃO 4 • Funções</span>
+            <h3 class="question-title">Função Personalizada</h3>
+            <p class="question-description">
+                Crie uma função útil relacionada com a sua vida ou interesses.
+            </p>
+
+            <div class="required-personalization">
+                <strong> Personalização Obrigatória:</strong><br>
+                • A função deve ter um nome relacionado com o seu HOBBY ou ANIMAL<br>
+                • Receber pelo menos 2 parâmetros<br>
+                • Fazer um cálculo ou processamento relevante<br>
+                • Incluir comentários explicativos com exemplos pessoais
+            </div>
+
+            <div class="code-hint">
+                 Exemplos: calcular_tempo_treino(), comparar_precos_equipamento(),<br>
+                calcular_idade_animal_em_anos_humanos()
+            </div>
+
+            <label for="q4">Cole aqui o seu código Python:</label>
+            <textarea id="q4" placeholder="# Escreva o seu código aqui..."></textarea>
+        </div>
+
+        <!-- QUESTÃO 5 -->
+        <div class="question-card" style="animation-delay: 0.5s;">
+            <span class="question-number">QUESTÃO 5 • Dicionários</span>
+            <h3 class="question-title">Base de Dados Pessoal</h3>
+            <p class="question-description">
+                Crie um programa que use dicionários para organizar informação pessoal.
+            </p>
+
+            <div class="required-personalization">
+                <strong> Personalização Obrigatória:</strong><br>
+                • Crie um dicionário com os seus dados (nome, idade, cidade, hobby, animal)<br>
+                • Adicione pelo menos 2 campos extra personalizados<br>
+                • Use métodos de dicionário (keys(), values(), items(), get())<br>
+                • Apresente os dados de forma formatada
+            </div>
+
+            <div class="code-hint">
+                 Pense em criar um perfil completo seu, ou de alguém que admira
+            </div>
+
+            <label for="q5">Cole aqui o seu código Python:</label>
+            <textarea id="q5" placeholder="# Escreva o seu código aqui..."></textarea>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar"></div>
+        </div>
+
+        <div style="text-align: center; margin: 3rem 0;">
+            <button class="btn" onclick="validateTest()"> VALIDAR TESTE</button>
+        </div>
+
+        <div id="validationResult" class="validation-result"></div>
+
+        <div id="exportButtons" style="text-align: center; margin: 2rem 0; display: none;">
+            <button class="btn" onclick="exportToFile()" style="margin: 0.5rem; background: linear-gradient(135deg, #667eea, #764ba2);">
+                EXPORTAR FICHEIRO
+            </button>
+            <button class="btn" onclick="copyAllToClipboard()" style="margin: 0.5rem; background: linear-gradient(135deg, #f093fb, #f5576c);">
+                COPIAR TUDO
+            </button>
+            <button class="btn" onclick="printTest()" style="margin: 0.5rem; background: linear-gradient(135deg, #4facfe, #00f2fe);">
+                 IMPRIMIR/PDF
+            </button>
+        </div>
+
+        <div class="tips-section">
+            <h4>💡 Dicas para Máxima Pontuação:</h4>
+            <div class="tip">✓ Use os seus dados reais em TODAS as questões</div>
+            <div class="tip">✓ Adicione comentários explicativos no código</div>
+            <div class="tip">✓ Varie os nomes das variáveis (não use sempre "x", "y", "z")</div>
+            <div class="tip">✓ Teste o código antes de submeter</div>
+            <div class="tip">✓ Seja criativo nas mensagens apresentadas</div>
+            <div class="tip">✓ Evite código genérico tipo "exemplo1", "teste", "valor"</div>
+        </div>
+
+        <div class="info-box" style="margin-top: 2rem;">
+            <h3> Como Guardar o Seu Teste</h3>
+            <ul>
+                <li><strong>Exportar Ficheiro:</strong> Gera um ficheiro .txt com todas as respostas (pode guardar na pen)</li>
+                <li><strong>Copiar Tudo:</strong> Copia todo o conteúdo (pode colar num Word ou email)</li>
+                <li><strong>Imprimir/PDF:</strong> Imprime ou guarda como PDF directamente do browser</li>
+            </ul>
+            <p style="margin-top: 1rem; font-style: italic; color: var(--warning);">
+                 IMPORTANTE: Valide o teste ANTES de exportar para incluir a pontuação!
+            </p>
+        </div>
+
+        <footer>
+            <p>🎓 Escola Secundária Dr. António Carvalho Figueiredo</p>
+            <p>Curso de Python - 3º PIS • Prof. Gonçalo Silva</p>
+            <p style="font-size: 0.85rem; margin-top: 0.5rem;">Sistema de Verificação de Originalidade v1.0</p>
+        </footer>
+    </div>
+
+    <script>
+        // CRONÓMETRO DE 90 MINUTOS
+        let timeRemaining = 90 * 60; // 90 minutos em segundos
+        let timerInterval;
+
+        function updateTimer() {
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = timeRemaining % 60;
+            const display = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            
+            const timerElement = document.getElementById('timer');
+            timerElement.textContent = display;
+            
+            // Alterar cores conforme o tempo
+            if (timeRemaining <= 300) { // Últimos 5 minutos
+                timerElement.className = 'timer-display critical';
+            } else if (timeRemaining <= 900) { // Últimos 15 minutos
+                timerElement.className = 'timer-display warning';
+            } else {
+                timerElement.className = 'timer-display';
+            }
+            
+            // Alertas
+            if (timeRemaining === 900) {
+                alert(' ATENÇÃO: Faltam 15 minutos para terminar o teste!');
+            } else if (timeRemaining === 300) {
+                alert(' ATENÇÃO: Faltam apenas 5 minutos!');
+            } else if (timeRemaining === 60) {
+                alert(' ÚLTIMO MINUTO! Termine e valide o seu teste!');
+            }
+            
+            if (timeRemaining <= 0) {
+                clearInterval(timerInterval);
+                timerElement.textContent = '00:00';
+                alert(' TEMPO ESGOTADO! O teste terminou. Por favor, valide o que conseguiu responder.');
+                // Desabilitar textareas
+                document.querySelectorAll('textarea').forEach(ta => ta.disabled = true);
+                document.querySelectorAll('input').forEach(inp => inp.disabled = true);
+            } else {
+                timeRemaining--;
+            }
+        }
+
+        // Iniciar cronómetro
+        timerInterval = setInterval(updateTimer, 1000);
+        updateTimer(); // Atualização imediata
+
+        function validateTest() {
+            // Obter dados do aluno
+            const nome = document.getElementById('nome').value.trim();
+            const numero = document.getElementById('numero').value.trim();
+            const idade = document.getElementById('idade').value;
+            const hobby = document.getElementById('hobby').value.trim().toLowerCase();
+            const animal = document.getElementById('animal').value.trim().toLowerCase();
+            const cidade = document.getElementById('cidade').value.trim().toLowerCase();
+
+            // Obter respostas
+            const q1 = document.getElementById('q1').value;
+            const q2 = document.getElementById('q2').value;
+            const q3 = document.getElementById('q3').value;
+            const q4 = document.getElementById('q4').value;
+            const q5 = document.getElementById('q5').value;
+
+            // Validações
+            let totalScore = 0;
+            let maxScore = 100;
+            let validations = [];
+
+            // Verificar se preencheu dados pessoais
+            if (!nome || !numero || !idade || !hobby || !animal || !cidade) {
+                alert(' Por favor, preencha todos os dados pessoais primeiro!');
+                return;
+            }
+
+            // Verificar se preencheu todas as questões
+            if (!q1 || !q2 || !q3 || !q4 || !q5) {
+                alert(' Por favor, responda a todas as questões!');
+                return;
+            }
+
+            // === VALIDAÇÃO QUESTÃO 1 ===
+            let q1Score = 0;
+            let q1Checks = [];
+            
+            if (q1.toLowerCase().includes(nome.toLowerCase().split(' ')[0])) {
+                q1Score += 4;
+                q1Checks.push('✓ Incluiu o seu nome');
+            } else {
+                q1Checks.push('✗ Não encontrámos o seu nome no código');
+            }
+
+            if (q1.includes(idade)) {
+                q1Score += 4;
+                q1Checks.push('✓ Incluiu a sua idade');
+            } else {
+                q1Checks.push('✗ Não encontrámos a sua idade no código');
+            }
+
+            if (q1.match(/f['"]/i) || q1.includes('.format(')) {
+                q1Score += 4;
+                q1Checks.push('✓ Usou formatação de strings');
+            } else {
+                q1Checks.push('✗ Não usou f-strings ou .format()');
+            }
+
+            if (q1.split('=').length >= 6) {
+                q1Score += 4;
+                q1Checks.push('✓ Criou variáveis suficientes');
+            } else {
+                q1Checks.push('✗ Crie pelo menos 5 variáveis');
+            }
+
+            if (q1.includes('2026') || q1.includes('2025') || q1.includes(String(2026 - parseInt(idade)))) {
+                q1Score += 4;
+                q1Checks.push('✓ Incluiu cálculo (ano de nascimento ou similar)');
+            } else {
+                q1Checks.push('✗ Não encontrámos cálculos no código');
+            }
+
+            validations.push({
+                question: 'QUESTÃO 1',
+                score: q1Score,
+                max: 20,
+                checks: q1Checks
+            });
+            totalScore += q1Score;
+
+            // === VALIDAÇÃO QUESTÃO 2 ===
+            let q2Score = 0;
+            let q2Checks = [];
+
+            if (q2.toLowerCase().includes(hobby) || similarWords(q2.toLowerCase(), hobby)) {
+                q2Score += 5;
+                q2Checks.push('✓ Código relacionado com o seu hobby');
+            } else {
+                q2Checks.push('✗ O código não parece relacionado com "' + hobby + '"');
+            }
+
+            if (q2.includes('if') && (q2.includes('elif') || q2.includes('else'))) {
+                q2Score += 5;
+                q2Checks.push('✓ Usou estruturas condicionais');
+            } else {
+                q2Checks.push('✗ Falta usar if/elif/else');
+            }
+
+            if (q2.includes('input(')) {
+                q2Score += 5;
+                q2Checks.push('✓ Pediu input ao utilizador');
+            } else {
+                q2Checks.push('✗ Não pediu input ao utilizador');
+            }
+
+            if (q2.toLowerCase().includes(nome.toLowerCase().split(' ')[0])) {
+                q2Score += 5;
+                q2Checks.push('✓ Personalizou mensagens com o seu nome');
+            } else {
+                q2Checks.push('✗ As mensagens não incluem o seu nome');
+            }
+
+            validations.push({
+                question: 'QUESTÃO 2',
+                score: q2Score,
+                max: 20,
+                checks: q2Checks
+            });
+            totalScore += q2Score;
+
+            // === VALIDAÇÃO QUESTÃO 3 ===
+            let q3Score = 0;
+            let q3Checks = [];
+
+            if ((q3.includes('[') && q3.includes(']')) || q3.includes('list(')) {
+                q3Score += 4;
+                q3Checks.push('✓ Criou uma lista');
+            } else {
+                q3Checks.push('✗ Não criou uma lista');
+            }
+
+            if (q3.includes('for ') || q3.includes('while ')) {
+                q3Score += 4;
+                q3Checks.push('✓ Usou um ciclo');
+            } else {
+                q3Checks.push('✗ Não usou ciclos for ou while');
+            }
+
+            if (q3.toLowerCase().includes(cidade)) {
+                q3Score += 4;
+                q3Checks.push('✓ Mencionou a sua cidade');
+            } else {
+                q3Checks.push('✗ Não mencionou "' + cidade + '" no código');
+            }
+
+            const listMethods = ['append', 'remove', 'sort', 'pop', 'insert', 'extend'];
+            if (listMethods.some(method => q3.includes(method))) {
+                q3Score += 4;
+                q3Checks.push('✓ Usou métodos de lista');
+            } else {
+                q3Checks.push('✗ Não usou métodos de lista (append, remove, sort...)');
+            }
+
+            // Verificar se há pelo menos 5 itens relacionados
+            const brackets = q3.match(/\[(.*?)\]/);
+            if (brackets && brackets[1].split(',').length >= 5) {
+                q3Score += 4;
+                q3Checks.push('✓ Lista tem 5 ou mais itens');
+            } else {
+                q3Checks.push('✗ A lista deve ter pelo menos 5 itens');
+            }
+
+            validations.push({
+                question: 'QUESTÃO 3',
+                score: q3Score,
+                max: 20,
+                checks: q3Checks
+            });
+            totalScore += q3Score;
+
+            // === VALIDAÇÃO QUESTÃO 4 ===
+            let q4Score = 0;
+            let q4Checks = [];
+
+            if (q4.includes('def ')) {
+                q4Score += 5;
+                q4Checks.push('✓ Definiu uma função');
+            } else {
+                q4Checks.push('✗ Não definiu uma função (def)');
+            }
+
+            // Verificar parâmetros
+            const funcMatch = q4.match(/def\s+\w+\s*\((.*?)\)/);
+            if (funcMatch && funcMatch[1].split(',').length >= 2) {
+                q4Score += 5;
+                q4Checks.push('✓ Função tem 2 ou mais parâmetros');
+            } else {
+                q4Checks.push('✗ A função deve ter pelo menos 2 parâmetros');
+            }
+
+            if (q4.includes('#')) {
+                q4Score += 5;
+                q4Checks.push('✓ Incluiu comentários explicativos');
+            } else {
+                q4Checks.push('✗ Adicione comentários ao código');
+            }
+
+            if (q4.includes('return')) {
+                q4Score += 5;
+                q4Checks.push('✓ Função retorna um valor');
+            } else {
+                q4Checks.push('✗ A função deve retornar algo');
+            }
+
+            validations.push({
+                question: 'QUESTÃO 4',
+                score: q4Score,
+                max: 20,
+                checks: q4Checks
+            });
+            totalScore += q4Score;
+
+            // === VALIDAÇÃO QUESTÃO 5 ===
+            let q5Score = 0;
+            let q5Checks = [];
+
+            if (q5.includes('{') && q5.includes('}')) {
+                q5Score += 4;
+                q5Checks.push('✓ Criou um dicionário');
+            } else {
+                q5Checks.push('✗ Não criou um dicionário');
+            }
+
+            let personalDataCount = 0;
+            if (q5.toLowerCase().includes(nome.toLowerCase().split(' ')[0])) personalDataCount++;
+            if (q5.includes(idade)) personalDataCount++;
+            if (q5.toLowerCase().includes(cidade)) personalDataCount++;
+            if (q5.toLowerCase().includes(hobby)) personalDataCount++;
+            if (q5.toLowerCase().includes(animal)) personalDataCount++;
+
+            if (personalDataCount >= 5) {
+                q5Score += 4;
+                q5Checks.push('✓ Incluiu os seus dados pessoais');
+            } else {
+                q5Checks.push('✗ Faltam dados pessoais no dicionário (' + personalDataCount + '/5)');
+            }
+
+            const dictMethods = ['keys()', 'values()', 'items()', 'get('];
+            if (dictMethods.some(method => q5.includes(method))) {
+                q5Score += 4;
+                q5Checks.push('✓ Usou métodos de dicionário');
+            } else {
+                q5Checks.push('✗ Não usou métodos de dicionário');
+            }
+
+            if (q5.includes('print(') && q5.includes('f"')) {
+                q5Score += 4;
+                q5Checks.push('✓ Formatou a apresentação dos dados');
+            } else {
+                q5Checks.push('✗ Melhore a formatação da apresentação');
+            }
+
+            // Contar chaves no dicionário
+            const colonCount = (q5.match(/:/g) || []).length;
+            if (colonCount >= 7) {
+                q5Score += 4;
+                q5Checks.push('✓ Adicionou campos extra');
+            } else {
+                q5Checks.push('✗ Adicione pelo menos 2 campos extra ao dicionário');
+            }
+
+            validations.push({
+                question: 'QUESTÃO 5',
+                score: q5Score,
+                max: 20,
+                checks: q5Checks
+            });
+            totalScore += q5Score;
+
+            // === EXIBIR RESULTADOS ===
+            displayResults(validations, totalScore, maxScore, nome);
+        }
+
+        function similarWords(text, word) {
+            // Função auxiliar para verificar palavras similares
+            const variations = [
+                word,
+                word + 's',
+                word.slice(0, -1), // singular
+                word.slice(0, -2) // raiz
+            ];
+            return variations.some(v => text.includes(v));
+        }
+
+        function displayResults(validations, totalScore, maxScore, nome) {
+            const resultDiv = document.getElementById('validationResult');
+            const numero = document.getElementById('numero').value.trim();
+            const percentage = (totalScore / maxScore * 100).toFixed(1);
+            
+            let resultClass = percentage >= 70 ? 'success' : 'warning';
+            let resultIcon = percentage >= 70 ? '✅' : '⚠️';
+            let resultMessage = percentage >= 70 
+                ? `Parabéns, ${nome}! O seu teste mostra boa personalização!`
+                : `${nome}, o seu teste precisa de mais personalização!`;
+
+            let html = `
+                <div class="score-display">${resultIcon} ${percentage}%</div>
+                <h2 style="text-align: center; margin-bottom: 1rem; color: var(--accent-primary);">
+                    ${resultMessage}
+                </h2>
+                <p style="text-align: center; color: var(--text-secondary); margin-bottom: 0.5rem;">
+                    Aluno: ${nome} | Nº ${numero} | 3º PIS
+                </p>
+                <p style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem;">
+                    Pontuação: ${totalScore} / ${maxScore} pontos
+                </p>
+            `;
+
+            validations.forEach(v => {
+                const vPercentage = (v.score / v.max * 100).toFixed(0);
+                html += `
+                    <div style="margin: 2rem 0; padding: 1.5rem; background: var(--bg-card); border-radius: 8px;">
+                        <h3 style="color: var(--accent-secondary); margin-bottom: 1rem;">
+                            ${v.question} - ${v.score}/${v.max} pontos (${vPercentage}%)
+                        </h3>
+                        ${v.checks.map(check => {
+                            const isSuccess = check.startsWith('✓');
+                            const color = isSuccess ? 'var(--success)' : 'var(--warning)';
+                            return `<div class="validation-item" style="color: ${color};">${check}</div>`;
+                        }).join('')}
+                    </div>
+                `;
+            });
+
+            if (percentage >= 90) {
+                html += `
+                    <div style="background: rgba(0, 255, 136, 0.1); padding: 1.5rem; border-radius: 8px; margin-top: 2rem; border: 2px solid var(--accent-primary);">
+                        <h3 style="color: var(--accent-primary);">
+EXCELENTE TRABALHO!</h3>
+                        <p>O seu código demonstra alta originalidade e personalização. Continue assim!</p>
+                    </div>
+                `;
+            } else if (percentage >= 70) {
+                html += `
+                    <div style="background: rgba(0, 212, 255, 0.1); padding: 1.5rem; border-radius: 8px; margin-top: 2rem; border: 2px solid var(--accent-secondary);">
+                        <h3 style="color: var(--accent-secondary);"> BOM TRABALHO!</h3>
+                        <p>O seu código mostra boa personalização. Reveja os pontos assinalados para melhorar.</p>
+                    </div>
+                `;
+            } else {
+                html += `
+                    <div style="background: rgba(255, 107, 107, 0.1); padding: 1.5rem; border-radius: 8px; margin-top: 2rem; border: 2px solid var(--warning);">
+                        <h3 style="color: var(--warning);"> PRECISA MELHORAR</h3>
+                        <p>O seu código precisa de mais personalização. Certifique-se que está a usar os SEUS dados pessoais em todas as questões. Evite exemplos genéricos.</p>
+                    </div>
+                `;
+            }
+
+            resultDiv.innerHTML = html;
+            resultDiv.className = `validation-result ${resultClass}`;
+            resultDiv.style.display = 'block';
+
+            // Atualizar barra de progresso
+            document.getElementById('progressBar').style.width = percentage + '%';
+
+            // Scroll suave para os resultados
+            resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            
+            // Mostrar botões de exportação
+            document.getElementById('exportButtons').style.display = 'block';
+        }
+
+        function exportToFile() {
+            const nome = document.getElementById('nome').value.trim();
+            const numero = document.getElementById('numero').value.trim();
+            const turma = document.getElementById('turma').value.trim();
+            const idade = document.getElementById('idade').value;
+            const hobby = document.getElementById('hobby').value.trim();
+            const animal = document.getElementById('animal').value.trim();
+            const cidade = document.getElementById('cidade').value.trim();
+            
+            const q1 = document.getElementById('q1').value;
+            const q2 = document.getElementById('q2').value;
+            const q3 = document.getElementById('q3').value;
+            const q4 = document.getElementById('q4').value;
+            const q5 = document.getElementById('q5').value;
+            
+            const now = new Date();
+            const dateStr = now.toLocaleString('pt-PT');
+            
+            // Criar conteúdo do ficheiro
+            let content = `═══════════════════════════════════════════════════════════════
+TESTE DE PYTHON - RESPOSTAS DO ALUNO
+Escola Secundária Dr. António Carvalho Figueiredo
+═══════════════════════════════════════════════════════════════
+
+ DADOS DO ALUNO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Nome: ${nome}
+Número: ${numero}
+Turma: ${turma}
+Idade: ${idade}
+Hobby: ${hobby}
+Animal Favorito: ${animal}
+Cidade: ${cidade}
+Data de Submissão: ${dateStr}
+
+═══════════════════════════════════════════════════════════════
+QUESTÃO 1 - VARIÁVEIS E PRINT
+═══════════════════════════════════════════════════════════════
+
+${q1}
+
+═══════════════════════════════════════════════════════════════
+QUESTÃO 2 - ESTRUTURAS CONDICIONAIS
+═══════════════════════════════════════════════════════════════
+
+${q2}
+
+═══════════════════════════════════════════════════════════════
+QUESTÃO 3 - LISTAS E CICLOS
+═══════════════════════════════════════════════════════════════
+
+${q3}
+
+═══════════════════════════════════════════════════════════════
+QUESTÃO 4 - FUNÇÕES
+═══════════════════════════════════════════════════════════════
+
+${q4}
+
+═══════════════════════════════════════════════════════════════
+QUESTÃO 5 - DICIONÁRIOS
+═══════════════════════════════════════════════════════════════
+
+${q5}
+
+═══════════════════════════════════════════════════════════════
+FIM DO TESTE
+═══════════════════════════════════════════════════════════════
+`;
+
+            // Criar ficheiro para download
+            const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Teste_Python_${numero}_${nome.replace(/\s+/g, '_')}_${turma}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+            
+            alert('✅ Ficheiro exportado com sucesso!\n\nO ficheiro foi guardado na pasta de Downloads com o nome:\n' + a.download);
+        }
+
+        function copyAllToClipboard() {
+            const nome = document.getElementById('nome').value.trim();
+            const numero = document.getElementById('numero').value.trim();
+            const turma = document.getElementById('turma').value.trim();
+            const idade = document.getElementById('idade').value;
+            const hobby = document.getElementById('hobby').value.trim();
+            const animal = document.getElementById('animal').value.trim();
+            const cidade = document.getElementById('cidade').value.trim();
+            
+            const q1 = document.getElementById('q1').value;
+            const q2 = document.getElementById('q2').value;
+            const q3 = document.getElementById('q3').value;
+            const q4 = document.getElementById('q4').value;
+            const q5 = document.getElementById('q5').value;
+            
+            const now = new Date();
+            const dateStr = now.toLocaleString('pt-PT');
+            
+            const content = `TESTE DE PYTHON - ${nome} (Nº ${numero}) - ${turma}
+Data: ${dateStr}
+
+DADOS DO ALUNO:
+Nome: ${nome}
+Número: ${numero}
+Turma: ${turma}
+Idade: ${idade}
+Hobby: ${hobby}
+Animal Favorito: ${animal}
+Cidade: ${cidade}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+QUESTÃO 1 - VARIÁVEIS E PRINT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+${q1}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+QUESTÃO 2 - ESTRUTURAS CONDICIONAIS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+${q2}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+QUESTÃO 3 - LISTAS E CICLOS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+${q3}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+QUESTÃO 4 - FUNÇÕES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+${q4}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+QUESTÃO 5 - DICIONÁRIOS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+${q5}
+`;
+
+            navigator.clipboard.writeText(content).then(() => {
+                alert('✅ Conteúdo copiado para a área de transferência!\n\nPode agora colar (Ctrl+V) num documento Word, email, ou qualquer editor de texto.');
+            }).catch(err => {
+                alert('❌ Erro ao copiar. Por favor, use Ctrl+A e Ctrl+C para copiar manualmente.');
+            });
+        }
+
+        function printTest() {
+            const nome = document.getElementById('nome').value.trim();
+            const numero = document.getElementById('numero').value.trim();
+            const turma = document.getElementById('turma').value.trim();
+            const idade = document.getElementById('idade').value;
+            const hobby = document.getElementById('hobby').value.trim();
+            const animal = document.getElementById('animal').value.trim();
+            const cidade = document.getElementById('cidade').value.trim();
+            
+            const q1 = document.getElementById('q1').value;
+            const q2 = document.getElementById('q2').value;
+            const q3 = document.getElementById('q3').value;
+            const q4 = document.getElementById('q4').value;
+            const q5 = document.getElementById('q5').value;
+            
+            const now = new Date();
+            const dateStr = now.toLocaleString('pt-PT');
+            
+            // Criar janela de impressão
+            const printWindow = window.open('', '', 'width=800,height=600');
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Teste Python - ${nome} (${numero})</title>
+                    <style>
+                        @media print {
+                            @page { margin: 2cm; }
+                        }
+                        body {
+                            font-family: Arial, sans-serif;
+                            line-height: 1.6;
+                            color: #000;
+                            background: #fff;
+                            padding: 20px;
+                            max-width: 800px;
+                            margin: 0 auto;
+                        }
+                        h1 {
+                            color: #2E75B6;
+                            border-bottom: 3px solid #2E75B6;
+                            padding-bottom: 10px;
+                        }
+                        h2 {
+                            color: #2E75B6;
+                            margin-top: 30px;
+                            border-left: 5px solid #2E75B6;
+                            padding-left: 10px;
+                        }
+                        .info-box {
+                            background: #f0f0f0;
+                            padding: 15px;
+                            border-radius: 5px;
+                            margin: 20px 0;
+                        }
+                        .info-box p {
+                            margin: 5px 0;
+                        }
+                        .code-box {
+                            background: #f8f8f8;
+                            border: 1px solid #ddd;
+                            padding: 15px;
+                            border-radius: 5px;
+                            font-family: 'Courier New', monospace;
+                            white-space: pre-wrap;
+                            font-size: 12px;
+                            margin: 15px 0;
+                        }
+                        .header {
+                            text-align: center;
+                            margin-bottom: 30px;
+                        }
+                        .footer {
+                            margin-top: 50px;
+                            text-align: center;
+                            font-size: 12px;
+                            color: #666;
+                            border-top: 1px solid #ddd;
+                            padding-top: 20px;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <h1>TESTE DE PYTHON</h1>
+                        <p><strong>Escola Secundária Dr. António Carvalho Figueiredo</strong></p>
+                        <p>Turma: ${turma} | Data: ${dateStr}</p>
+                    </div>
+                    
+                    <div class="info-box">
+                        <h2>📋 Dados do Aluno</h2>
+                        <p><strong>Nome:</strong> ${nome}</p>
+                        <p><strong>Número:</strong> ${numero}</p>
+                        <p><strong>Turma:</strong> ${turma}</p>
+                        <p><strong>Idade:</strong> ${idade}</p>
+                        <p><strong>Hobby:</strong> ${hobby}</p>
+                        <p><strong>Animal Favorito:</strong> ${animal}</p>
+                        <p><strong>Cidade:</strong> ${cidade}</p>
+                    </div>
+                    
+                    <h2>Questão 1 - Variáveis e Print</h2>
+                    <div class="code-box">${q1.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>
+                    
+                    <h2>Questão 2 - Estruturas Condicionais</h2>
+                    <div class="code-box">${q2.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>
+                    
+                    <h2>Questão 3 - Listas e Ciclos</h2>
+                    <div class="code-box">${q3.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>
+                    
+                    <h2>Questão 4 - Funções</h2>
+                    <div class="code-box">${q4.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>
+                    
+                    <h2>Questão 5 - Dicionários</h2>
+                    <div class="code-box">${q5.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>
+                    
+                    <div class="footer">
+                        <p>Escola Secundária Dr. António Carvalho Figueiredo - Curso de Python (3º PIS)</p>
+                        <p>Sistema de Verificação de Originalidade v1.0</p>
+                    </div>
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+            
+            // Aguardar carregamento antes de imprimir
+            setTimeout(() => {
+                printWindow.print();
+            }, 250);
+        }
+
+        // Salvar progresso automaticamente
+        setInterval(() => {
+            const data = {
+                nome: document.getElementById('nome').value,
+                numero: document.getElementById('numero').value,
+                idade: document.getElementById('idade').value,
+                hobby: document.getElementById('hobby').value,
+                animal: document.getElementById('animal').value,
+                cidade: document.getElementById('cidade').value,
+                q1: document.getElementById('q1').value,
+                q2: document.getElementById('q2').value,
+                q3: document.getElementById('q3').value,
+                q4: document.getElementById('q4').value,
+                q5: document.getElementById('q5').value,
+                timeRemaining: timeRemaining,
+                timestamp: new Date().toISOString()
+            };
+            localStorage.setItem('pythonTestProgress_3PIS', JSON.stringify(data));
+        }, 30000); // A cada 30 segundos
+
+        // Carregar progresso ao iniciar
+        window.addEventListener('load', () => {
+            const saved = localStorage.getItem('pythonTestProgress_3PIS');
+            if (saved) {
+                const data = JSON.parse(saved);
+                
+                // Verificar se é da mesma sessão (máximo 2 horas atrás)
+                const savedTime = new Date(data.timestamp);
+                const now = new Date();
+                const hoursDiff = (now - savedTime) / (1000 * 60 * 60);
+                
+                if (hoursDiff < 2 && confirm('Encontrámos um teste guardado anteriormente. Deseja continuar de onde parou?')) {
+                    document.getElementById('nome').value = data.nome || '';
+                    document.getElementById('numero').value = data.numero || '';
+                    document.getElementById('idade').value = data.idade || '';
+                    document.getElementById('hobby').value = data.hobby || '';
+                    document.getElementById('animal').value = data.animal || '';
+                    document.getElementById('cidade').value = data.cidade || '';
+                    document.getElementById('q1').value = data.q1 || '';
+                    document.getElementById('q2').value = data.q2 || '';
+                    document.getElementById('q3').value = data.q3 || '';
+                    document.getElementById('q4').value = data.q4 || '';
+                    document.getElementById('q5').value = data.q5 || '';
+                    
+                    // Restaurar tempo se houver
+                    if (data.timeRemaining && data.timeRemaining > 0) {
+                        timeRemaining = data.timeRemaining;
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
